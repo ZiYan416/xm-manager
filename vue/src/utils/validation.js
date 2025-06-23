@@ -37,3 +37,47 @@ export function validateAlphanumeric(input) {
     return regex.test(input);
 }
 
+export function validateUsername(input) {
+    // 匹配规则：6-12位，仅允许大小写字母、数字和下划线
+    const regex = /^[A-Za-z0-9_]{6,12}$/;
+    return regex.test(input);
+}
+
+export function validatePassword(input) {
+    // 匹配规则：6-12位，必须包含大/小写字母、符号、数字中的至少两个
+    const hasLower = /[a-z]/.test(input); // 包含小写字母
+    const hasUpper = /[A-Z]/.test(input); // 包含大写字母
+    const hasDigit = /[0-9]/.test(input); // 包含数字
+    const hasSymbol = /[\!\@\#\$\%\^\&\*\(\)\-\=\+\[\]\{\}\|\\\:\"\;\'\,\.\<\>\/\?\~\`]/.test(input); // 包含符号
+
+    const types = [hasLower, hasUpper, hasDigit, hasSymbol].filter(Boolean).length;
+
+    // 验证长度和类型
+    return input.length >= 6 && input.length <= 12 && types >= 2;
+}
+
+// 验证手机号码（中国大陆手机号）
+export function validatePhone(input) {
+    // 匹配规则：中国大陆手机号，以13/14/15/16/17/18/19开头，共11位数字
+    const regex = /^(13[0-9]|14[0-9]|15[0-9]|16[0-9]|17[0-9]|18[0-9]|19[0-9])\d{8}$/;
+    return regex.test(input);
+}
+
+// 验证邮箱地址
+export function validateEmail(input) {
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return regex.test(input);
+}
+
+// 验证昵称（小于12位）
+export function validateNickname(input) {
+    const regex = /^.{1,12}$/; // 匹配规则：最多12位
+    return regex.test(input);
+}
+
+// 验证网址格式
+export function validateUrl(input) {
+    // 网址正则表达式
+    const regex = /^(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6}|[\d\.]+)([\/\w \.-]*)*\/?$/;
+    return regex.test(input);
+}

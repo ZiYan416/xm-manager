@@ -5,7 +5,7 @@
     <div class="front-header">
       <div class="front-header-left">
         <img style="width: 50px; height: 50px" src="@/assets/imgs/logo.png" alt="">
-        <div class="title">奋进酒店预订网</div>
+        <div class="title">你好酒店预订网</div>
       </div>
       <div class="front-header-center">
         <div class="front-header-nav">
@@ -18,7 +18,7 @@
           </el-menu>
         </div>
       </div>
-      <div style="width: 350px">
+      <div style="width: calc(100vw * 350 / 1920)">
         <el-input  style="width: 70%" placeholder="请输入酒店名称" v-model="name"></el-input>
         <el-button style="margin-left: 5px" type="primary" @click="navToSearch">搜索</el-button>
       </div>

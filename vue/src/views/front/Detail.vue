@@ -164,7 +164,7 @@
               </el-row>
               <!--  回复-->
               <el-row :gutter="20" style="margin-top: 15px" v-for="child in item.children">
-                <el-col :span="4">
+                <el-col :span="5">
                   <div style="display: flex; align-items: center;">
                     <img :src="child.avatar" alt="" style="height: 50px; width: 50px; border-radius: 50%">
                     <div style="flex: 1; margin-left: 10px; color: #5E5C5CFF">{{child.userName}} <span style="font-weight: bold">回复：</span></div>

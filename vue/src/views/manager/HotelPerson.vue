@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-card style="width: 50%">
-      <el-form :model="user" label-width="100px" style="padding-right: 50px">
+      <el-form :model="user" label-width="100px" style="padding-right: 50px" :rules="formRules" ref="userForm">
         <div style="margin: 15px; text-align: center">
           <el-upload
               class="avatar-uploader"
@@ -31,7 +31,7 @@
         <el-form-item label="官网" prop="url">
           <el-input v-model="user.url" placeholder="官网"></el-input>
         </el-form-item>
-        <el-form-item label="介绍" prop="url">
+        <el-form-item label="介绍" prop="description">
           <el-input type="textarea" v-model="user.description" placeholder="介绍"></el-input>
         </el-form-item>
         <div style="text-align: center; margin-bottom: 20px">
@@ -43,37 +43,82 @@
 </template>
 
 <script>
+import { validatePhone, validateEmail, validateUrl } from '@/utils/validation'; // 引入验证规则
+
 export default {
   name: "AdminPerson",
   data() {
     return {
-      user: JSON.parse(localStorage.getItem('xm-user') || '{}')
-    }
+      user: JSON.parse(localStorage.getItem('xm-user') || '{}'),
+      formRules: {
+        name: [
+          { required: true, message: '请输入酒店名称', trigger: 'blur' }
+        ],
+        phone: [
+          { validator: (rule, value, callback) => {
+              if (value && !validatePhone(value)) {
+                callback(new Error('电话格式不正确'));
+              } else {
+                callback();
+              }
+            }, trigger: 'blur'
+          }
+        ],
+        email: [
+          { validator: (rule, value, callback) => {
+              if (value && !validateEmail(value)) {
+                callback(new Error('邮箱格式不正确'));
+              } else {
+                callback();
+              }
+            }, trigger: 'blur'
+          }
+        ],
+        url: [
+          { validator: (rule, value, callback) => {
+              if (value && !validateUrl(value)) {
+                callback(new Error('网址格式不正确'));
+              } else {
+                callback();
+              }
+            }, trigger: 'blur'
+          }
+        ],
+        price: [
+          { validator: (rule, value, callback) => {
+              if (value && isNaN(value)) {
+                callback(new Error('价格必须是数字'));
+              } else {
+                callback();
+              }
+            }, trigger: 'blur'
+          }
+        ]
+      }
+    };
   },
   created() {
-
   },
   methods: {
     update() {
-      // 保存当前的用户信息到数据库
-      this.$request.put('/hotel/update', this.user).then(res => {
-        if (res.code === '200') {
-          // 成功更新
-          this.$message.success('保存成功')
-
-          // 更新浏览器缓存里的用户信息
-          localStorage.setItem('xm-user', JSON.stringify(this.user))
-
-          // 触发父级的数据更新
-          this.$emit('update:user')
+      this.$refs.userForm.validate((valid) => {
+        if (valid) {
+          this.$request.put('/hotel/update', this.user).then(res => {
+            if (res.code === '200') {
+              this.$message.success('保存成功');
+              localStorage.setItem('xm-user', JSON.stringify(this.user));
+              this.$emit('update:user');
+            } else {
+              this.$message.error(res.msg);
+            }
+          });
         } else {
-          this.$message.error(res.msg)
+          this.$message.error('请检查输入内容是否正确');
         }
-      })
+      });
     },
     handleAvatarSuccess(response, file, fileList) {
-      // 把user的头像属性换成上传的图片的链接
-      this.$set(this.user, 'avatar', response.data)
+      this.$set(this.user, 'avatar', response.data);
     },
   }
 }

@@ -29,6 +29,8 @@ public class Hotel extends Account implements Serializable {
     private String description;
     /** 审核状态 */
     private String status;
+    /** 评论数量 */
+    private Integer comments;
 
     @Override
     public Integer getId() {
@@ -136,5 +138,13 @@ public class Hotel extends Account implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Integer getComments() {
+        return comments;
+    }
+
+    public void setComments(Integer comments) {
+        this.comments = comments;
     }
 }

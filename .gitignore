@@ -3,3 +3,5 @@
 /vue/node_modules
 /springboot/src/main/resources/application.yml
 /vue/package-lock.json
+/vue/.env.development
+/springboot/src/main/java/com/example/controller/FileController.java

@@ -11,7 +11,7 @@
     background: white;
 }
 .front-header-left {
-    width: 350px;
+    width: 340px;
     display: flex;
     align-items: center;
     padding-left: 30px;
@@ -57,3 +57,8 @@
     border: none !important;
     height: 59px;
 }
+
+.el-menu-item {
+    padding: 0 calc(100vw * 20 / 1920);
+}
+

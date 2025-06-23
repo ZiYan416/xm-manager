@@ -4,7 +4,7 @@
     <div class="manager-header">
       <div class="manager-header-left">
         <img style="width: 46px; height: 46px" src="@/assets/imgs/logo.png" />
-        <div class="title"><a style="font-family: 宋体;">奋进</a>后台管理系统</div>
+        <div class="title"><a style="font-family: 宋体;">酒店</a>后台管理系统</div>
       </div>
 
       <div class="manager-header-center">
@@ -42,31 +42,31 @@
             <template slot="title">
               <i class="el-icon-menu"></i><span>信息管理</span>
             </template>
-<!--            <el-menu-item v-if="user.role === 'ADMIN'" index="/notice">公告信息</el-menu-item>-->
-            <el-menu-item index="/notice">公告信息</el-menu-item>
+            <el-menu-item v-if="user.role === 'ADMIN'" index="/notice">公告信息</el-menu-item>
+<!--            <el-menu-item index="/notice">公告信息</el-menu-item>-->
             <el-menu-item index="/type">房间分类</el-menu-item>
             <el-menu-item index="/room">客房信息</el-menu-item>
             <el-menu-item index="/orders">订单信息</el-menu-item>
             <el-menu-item index="/checkin">入住登记</el-menu-item>
-            <el-menu-item index="/comment">评论管理</el-menu-item>
+            <el-menu-item v-if="user.role === 'ADMIN'" index="/comment">评论管理</el-menu-item>
           </el-submenu>
 
-          <el-submenu index="user">
-            <template slot="title">
-              <i class="el-icon-menu"></i><span>用户管理</span>
-            </template>
-<!--            <el-menu-item index="/admin">管理员信息</el-menu-item>-->
-            <!--            <el-menu-item index="/hotel">酒店信息</el-menu-item>-->
-            <el-menu-item index="/user">用户信息</el-menu-item>
-          </el-submenu>
-<!--          <el-submenu index="user" v-if="user.role === 'ADMIN'">-->
+<!--          <el-submenu index="user">-->
 <!--            <template slot="title">-->
 <!--              <i class="el-icon-menu"></i><span>用户管理</span>-->
 <!--            </template>-->
-<!--            <el-menu-item index="/admin">管理员信息</el-menu-item>-->
-<!--&lt;!&ndash;            <el-menu-item index="/hotel">酒店信息</el-menu-item>&ndash;&gt;-->
+<!--&lt;!&ndash;            <el-menu-item index="/admin">管理员信息</el-menu-item>&ndash;&gt;-->
+<!--            &lt;!&ndash;            <el-menu-item index="/hotel">酒店信息</el-menu-item>&ndash;&gt;-->
 <!--            <el-menu-item index="/user">用户信息</el-menu-item>-->
 <!--          </el-submenu>-->
+          <el-submenu index="user" v-if="user.role === 'ADMIN'">
+            <template slot="title">
+              <i class="el-icon-menu"></i><span>用户管理</span>
+            </template>
+            <el-menu-item index="/admin">管理员信息</el-menu-item>
+            <el-menu-item index="/hotel">酒店信息</el-menu-item>
+            <el-menu-item index="/user">用户信息</el-menu-item>
+          </el-submenu>
         </el-menu>
       </div>
 

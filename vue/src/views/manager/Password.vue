@@ -23,15 +23,25 @@
 export default {
   name: "Password",
   data() {
+    const validatePasswordConfirm = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请确认密码'));
+      } else if (value !== this.user.newPassword) {
+        callback(new Error('两次输入的密码不一致'));
+      } else {
+        callback();
+      }
+    };
+
     const validatePassword = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请确认密码'))
-      } else if (value !== this.user.newPassword) {
-        callback(new Error('确认密码错误'))
+        callback(new Error('请输入新密码'));
+      } else if (!this.checkPasswordComplexity(value)) {
+        callback(new Error('密码必须为6-12位，且包含大/小写字母、符号、数字中的至少两个'));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
 
     return {
       user: JSON.parse(localStorage.getItem('xm-user') || '{}'),
@@ -41,15 +51,13 @@ export default {
         ],
         newPassword: [
           { required: true, message: '请输入新密码', trigger: 'blur' },
+          { validator: validatePassword, trigger: 'blur' }
         ],
         confirmPassword: [
-          { validator: validatePassword, required: true, trigger: 'blur' },
+          { validator: validatePasswordConfirm, required: true, trigger: 'blur' },
         ],
       }
     }
-  },
-  created() {
-
   },
   methods: {
     update() {
@@ -58,15 +66,26 @@ export default {
           this.$request.put('/updatePassword', this.user).then(res => {
             if (res.code === '200') {
               // 成功更新
-              this.$message.success('修改密码成功')
-              this.$router.push('/login')
+              this.$message.success('修改密码成功');
+              this.$router.push('/login');
             } else {
-              this.$message.error(res.msg)
+              this.$message.error(res.msg);
             }
-          })
+          });
         }
-      })
+      });
     },
+    checkPasswordComplexity(password) {
+      const hasUpperCase = /[A-Z]/.test(password);
+      const hasLowerCase = /[a-z]/.test(password);
+      const hasNumber = /\d/.test(password);
+      const hasSymbol = /[\W_]/.test(password);
+
+      const conditions = [hasUpperCase, hasLowerCase, hasNumber, hasSymbol];
+      const validConditions = conditions.filter(condition => condition);
+
+      return password.length >= 6 && password.length <= 12 && validConditions.length >= 2;
+    }
   }
 }
 </script>

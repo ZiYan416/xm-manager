@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="search">
-      <el-input placeholder="请输入账号查询" style="width: 200px" v-model="username"></el-input>
+      <el-input placeholder="请输入酒店账号查询" style="width: 200px" v-model="username"></el-input>
       <el-button type="info" plain style="margin-left: 10px" @click="load(1)">查询</el-button>
       <el-button type="warning" plain style="margin-left: 10px" @click="reset">重置</el-button>
     </div>
@@ -31,7 +31,17 @@
         <el-table-column prop="url" label="官网" show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="description" label="介绍" show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="role" label="角色"></el-table-column>
-        <el-table-column prop="status" label="状态"></el-table-column>
+        <el-table-column label="状态" prop="status" align="center">
+          <template v-slot="scope">
+            <el-tag
+                :closable="false"
+                :effect="scope.row.status == '审核通过' ? 'dark' : (scope.row.status == '待审核' ? 'dark' : 'dark')"
+                :color="scope.row.status == '审核通过' ? '#4CAF50' : (scope.row.status == '待审核' ? '#FFC107' : '#F44336')"
+                style="font-weight: bold;">
+              {{ scope.row.status }}
+            </el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" align="center" width="180">
           <template v-slot="scope">
             <el-button size="mini" type="primary" plain @click="handleEdit(scope.row)">编辑</el-button>
@@ -52,7 +62,6 @@
         </el-pagination>
       </div>
     </div>
-
 
     <el-dialog title="酒店" :visible.sync="fromVisible" width="40%" :close-on-click-modal="false" destroy-on-close>
       <el-form :model="form" label-width="100px" style="padding-right: 50px" :rules="rules" ref="formRef">
@@ -91,8 +100,6 @@
         <el-button type="primary" @click="save">确 定</el-button>
       </div>
     </el-dialog>
-
-
   </div>
 </template>
 

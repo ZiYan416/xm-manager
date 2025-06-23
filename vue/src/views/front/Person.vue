@@ -4,7 +4,7 @@
       <div style="text-align: right; margin-bottom: 20px">
         <el-button type="primary" @click="updatePassword">修改密码</el-button>
       </div>
-      <el-form :model="user" label-width="80px" style="padding-right: 20px">
+      <el-form :model="user" label-width="80px" style="padding-right: 20px" :rules="formRules" ref="userForm">
         <div style="margin: 15px; text-align: center">
           <el-upload
               class="avatar-uploader"
@@ -34,7 +34,7 @@
       </el-form>
     </el-card>
     <el-dialog title="修改密码" :visible.sync="dialogVisible" width="30%" :close-on-click-modal="false" destroy-on-close>
-      <el-form :model="user" label-width="80px" style="padding-right: 20px" :rules="rules" ref="formRef">
+      <el-form :model="user" label-width="80px" style="padding-right: 20px" :rules="passwordRules" ref="passwordForm">
         <el-form-item label="原始密码" prop="password">
           <el-input show-password v-model="user.password" placeholder="原始密码"></el-input>
         </el-form-item>
@@ -46,7 +46,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="fromVisible = false">取 消</el-button>
+        <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="save">确 定</el-button>
       </div>
     </el-dialog>
@@ -54,76 +54,122 @@
 </template>
 
 <script>
+import {
+  validateNickname,
+  validatePhone,
+  validateEmail,
+  validatePassword
+} from '@/utils/validation'; // 引入验证规则
+
 export default {
   data() {
-    const validatePassword = (rule, value, callback) => {
+    // 验证确认密码
+    const validatePasswordConfirm = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请确认密码'))
+        callback(new Error('请确认密码'));
       } else if (value !== this.user.newPassword) {
-        callback(new Error('确认密码错误'))
+        callback(new Error('两次输入的密码不一致'));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
+
     return {
       user: JSON.parse(localStorage.getItem('xm-user') || '{}'),
       dialogVisible: false,
 
-      rules: {
+      formRules: {
+        name: [
+          { validator: (rule, value, callback) => {
+              if (value && !validateNickname(value)) {
+                callback(new Error('昵称最多12个字符'));
+              } else {
+                callback();
+              }
+            }, trigger: 'blur'
+          }
+        ],
+        phone: [
+          { validator: (rule, value, callback) => {
+              if (value && !validatePhone(value)) {
+                callback(new Error('请输入正确的手机号'));
+              } else {
+                callback();
+              }
+            }, trigger: 'blur'
+          }
+        ],
+        email: [
+          { validator: (rule, value, callback) => {
+              if (value && !validateEmail(value)) {
+                callback(new Error('邮箱格式不正确'));
+              } else {
+                callback();
+              }
+            }, trigger: 'blur'
+          }
+        ]
+      },
+      passwordRules: {
         password: [
-          { required: true, message: '请输入原始密码', trigger: 'blur' },
+          { required: true, message: '请输入原始密码', trigger: 'blur' }
         ],
         newPassword: [
           { required: true, message: '请输入新密码', trigger: 'blur' },
+          { validator: (rule, value, callback) => {
+              if (!validatePassword(value)) {
+                callback(new Error('密码为6-12位，必须包含大/小写字母、符号、数字中的至少两个'));
+              } else {
+                callback();
+              }
+            }, trigger: 'blur'
+          }
         ],
         confirmPassword: [
-          { validator: validatePassword, required: true, trigger: 'blur' },
-        ],
+          { validator: validatePasswordConfirm, required: true, trigger: 'blur' }
+        ]
       }
-    }
-  },
-  created() {
-
+    };
   },
   methods: {
     update() {
-      // 保存当前的用户信息到数据库
-      this.$request.put('/user/update', this.user).then(res => {
-        if (res.code === '200') {
-          // 成功更新
-          this.$message.success('保存成功')
-          // 更新浏览器缓存里的用户信息
-          localStorage.setItem('xm-user', JSON.stringify(this.user))
-
-          // 触发父级的数据更新
-          this.$emit('update:user')
+      this.$refs.userForm.validate((valid) => {
+        if (valid) {
+          this.$request.put('/user/update', this.user).then(res => {
+            if (res.code === '200') {
+              this.$message.success('保存成功');
+              localStorage.setItem('xm-user', JSON.stringify(this.user));
+              this.$emit('update:user');
+            } else {
+              this.$message.error(res.msg);
+            }
+          });
         } else {
-          this.$message.error(res.msg)
+          this.$message.error('请检查输入内容');
         }
-      })
+      });
     },
     handleAvatarSuccess(response, file, fileList) {
-      // 把user的头像属性换成上传的图片的链接
-      this.$set(this.user, 'avatar', response.data)
+      this.$set(this.user, 'avatar', response.data);
     },
-    // 修改密码
     updatePassword() {
-      this.dialogVisible = true
+      this.dialogVisible = true;
     },
     save() {
-      this.$refs.formRef.validate((valid) => {
+      this.$refs.passwordForm.validate((valid) => {
         if (valid) {
           this.$request.put('/updatePassword', this.user).then(res => {
             if (res.code === '200') {
-              // 成功更新
-              this.$message.success('修改密码成功')
-              this.$router.push('/login')
+              this.$message.success('修改密码成功');
+              this.$router.push('/login');
             } else {
-              this.$message.error(res.msg)
+              this.$message.error(res.msg);
             }
-          })
+          });
+        } else {
+          this.$message.error('请检查密码是否正确');
         }
-      })
+      });
     }
   }
 }
