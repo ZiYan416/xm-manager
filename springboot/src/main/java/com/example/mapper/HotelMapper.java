@@ -22,10 +22,8 @@ public interface HotelMapper {
 
     void updateById(Hotel hotel);
 
-    @Delete("delete from hotel where id = #{id}")
     void deleteById(Integer id);
 
-    @Select("select * from hotel where id = #{id}")
     Hotel selectById(Integer id);
 
     @Select("select * from hotel where status = '审核通过'")

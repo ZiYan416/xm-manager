@@ -19,6 +19,8 @@ public class Notice implements Serializable {
     /** 创建人 */
     private String user;
 
+    private Boolean deleted;
+
     public Integer getId() {
         return id;
     }
@@ -59,4 +61,7 @@ public class Notice implements Serializable {
         this.user = user;
     }
 
+    public Boolean getDeleted() {return deleted;}
+
+    public void setDeleted(Boolean deleted) {this.deleted = deleted;}
 }

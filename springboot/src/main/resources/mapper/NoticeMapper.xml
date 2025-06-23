@@ -5,7 +5,7 @@
 <mapper namespace="com.example.mapper.NoticeMapper">
 
     <sql id="Base_Column_List">
-        id,title,content,time,user
+        id, title, content, time, user, deleted
     </sql>
 
     <select id="selectAll" resultType="com.example.entity.Notice">
@@ -13,11 +13,13 @@
         <include refid="Base_Column_List" />
         from notice
         <where>
-            <if test="id != null"> and id= #{id}</if>
+            notice.deleted=0
+            <if test="id != null"> and id = #{id}</if>
             <if test="title != null"> and title like concat('%', #{title}, '%')</if>
-            <if test="content != null"> and content= #{content}</if>
-            <if test="time != null"> and time= #{time}</if>
-            <if test="user != null"> and user= #{user}</if>
+            <if test="content != null"> and content = #{content}</if>
+            <if test="time != null"> and time = #{time}</if>
+            <if test="user != null"> and user = #{user}</if>
+<!--            <if test="deleted != null"> and deleted = #{deleted}</if>-->
         </where>
         order by id desc
     </select>
@@ -26,12 +28,13 @@
         select
         <include refid="Base_Column_List" />
         from notice
-        where id = #{id}
+        where id = #{id} and deleted = 0
     </select>
 
     <delete id="deleteById">
-        delete from notice
-        where  id = #{id}
+        update notice
+        set deleted = 1
+        where id = #{id}
     </delete>
 
     <insert id="insert" parameterType="com.example.entity.Notice" useGeneratedKeys="true">
@@ -42,6 +45,7 @@
             <if test="content != null">content,</if>
             <if test="time != null">time,</if>
             <if test="user != null">user,</if>
+            <if test="deleted != null">deleted,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -49,6 +53,8 @@
             <if test="content != null">#{content},</if>
             <if test="time != null">#{time},</if>
             <if test="user != null">#{user},</if>
+            <if test="deleted != null">#{deleted},</if>
+            <if test="deleted == null">0,</if>  <!-- 默认值为 0 -->
         </trim>
     </insert>
 
@@ -66,6 +72,9 @@
             </if>
             <if test="user != null">
                 user = #{user},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted},
             </if>
         </set>
         where id = #{id}

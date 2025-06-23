@@ -25,6 +25,8 @@ public class Admin extends Account implements Serializable {
     /** 角色标识 */
     private String role;
 
+    private Boolean deleted;
+
     @Override
     public Integer getId() {
         return id;
@@ -100,4 +102,8 @@ public class Admin extends Account implements Serializable {
     public void setRole(String role) {
         this.role = role;
     }
+
+    public Boolean getDeleted() {return deleted;}
+
+    public void setDeleted(Boolean deleted) {this.deleted = deleted;}
 }

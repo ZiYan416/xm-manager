@@ -17,6 +17,8 @@ public class Collect implements Serializable {
     private Double typePrice;
     private Integer typeNum;
 
+    private Boolean deleted;
+
     public Integer getId() {
         return id;
     }
@@ -64,4 +66,8 @@ public class Collect implements Serializable {
     public void setTypeNum(Integer typeNum) {
         this.typeNum = typeNum;
     }
+
+    public Boolean getDeleted() {return deleted;}
+
+    public void setDeleted(Boolean deleted) {this.deleted = deleted;}
 }

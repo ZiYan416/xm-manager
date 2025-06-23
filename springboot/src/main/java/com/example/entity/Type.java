@@ -25,6 +25,8 @@ public class Type implements Serializable {
 
     private String hotelName;
 
+    private Boolean deleted;
+
     public Integer getId() {
         return id;
     }
@@ -88,4 +90,8 @@ public class Type implements Serializable {
     public void setHotelName(String hotelName) {
         this.hotelName = hotelName;
     }
+
+    public Boolean getDeleted() {return deleted;}
+
+    public void setDeleted(Boolean deleted) {this.deleted = deleted;}
 }

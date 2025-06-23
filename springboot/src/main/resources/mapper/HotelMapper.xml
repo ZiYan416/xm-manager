@@ -5,7 +5,7 @@
 <mapper namespace="com.example.mapper.HotelMapper">
 
     <sql id="Base_Column_List">
-        id,username,password,name,phone,email,avatar,role,price,url,description,status
+        id, username, password, name, phone, email, avatar, role, price, url, description, status, deleted
     </sql>
 
     <select id="selectAll" resultType="com.example.entity.Hotel">
@@ -13,20 +13,36 @@
         <include refid="Base_Column_List" />
         from hotel
         <where>
+            hotel.deleted=0
             <if test="id != null"> and id = #{id}</if>
             <if test="username != null"> and username like concat('%', #{username}, '%')</if>
             <if test="password != null"> and password = #{password}</if>
             <if test="name != null"> and name like concat('%', #{name}, '%')</if>
             <if test="phone != null"> and phone = #{phone}</if>
-            <if test="email != null"> and email= #{email}</if>
+            <if test="email != null"> and email = #{email}</if>
             <if test="avatar != null"> and avatar = #{avatar}</if>
             <if test="role != null"> and role = #{role}</if>
             <if test="price != null"> and price = #{price}</if>
             <if test="url != null"> and url = #{url}</if>
             <if test="description != null"> and description = #{description}</if>
             <if test="status != null"> and status = #{status}</if>
+<!--            <if test="deleted != null"> and deleted = #{deleted}</if>-->
         </where>
+        order by id desc
     </select>
+
+    <select id="selectById" resultType="com.example.entity.Hotel">
+        select
+        <include refid="Base_Column_List" />
+        from hotel
+        where id = #{id} and deleted = 0
+    </select>
+
+    <delete id="deleteById">
+        update hotel
+        set deleted = 1
+        where id = #{id}
+    </delete>
 
     <insert id="insert" parameterType="com.example.entity.Hotel" useGeneratedKeys="true">
         insert into hotel
@@ -43,6 +59,7 @@
             <if test="url != null">url,</if>
             <if test="description != null">description,</if>
             <if test="status != null">status,</if>
+            <if test="deleted != null">deleted,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -57,6 +74,8 @@
             <if test="url != null">#{url},</if>
             <if test="description != null">#{description},</if>
             <if test="status != null">#{status},</if>
+            <if test="deleted != null">#{deleted},</if>
+            <if test="deleted == null">0,</if>  <!-- 默认值为 0 -->
         </trim>
     </insert>
 
@@ -95,6 +114,9 @@
             </if>
             <if test="status != null">
                 status = #{status},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted},
             </if>
         </set>
         where id = #{id}

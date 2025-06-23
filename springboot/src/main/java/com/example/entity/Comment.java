@@ -30,6 +30,8 @@ public class Comment implements Serializable {
 
     private String reply;
 
+    private Boolean deleted;
+
     private List<Comment> children;
 
     public Integer getId() {
@@ -143,4 +145,8 @@ public class Comment implements Serializable {
     public void setReply(String reply) {
         this.reply = reply;
     }
+
+    public Boolean getDeleted() {return deleted;}
+
+    public void setDeleted(Boolean deleted) {this.deleted = deleted;}
 }

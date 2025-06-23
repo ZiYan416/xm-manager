@@ -5,7 +5,7 @@
 <mapper namespace="com.example.mapper.CollectMapper">
 
     <sql id="Base_Column_List">
-        id,user_id,type_id
+        id, user_id, type_id, deleted
     </sql>
 
     <select id="selectAll" resultType="com.example.entity.Collect">
@@ -13,9 +13,11 @@
         <include refid="Base_Column_List" />
         from collect
         <where>
-            <if test="id != null"> and id= #{id}</if>
+            collect.deleted=0
+            <if test="id != null"> and id = #{id}</if>
             <if test="userId != null"> and user_id = #{userId}</if>
             <if test="typeId != null"> and type_id = #{typeId}</if>
+<!--            <if test="deleted != null"> and deleted = #{deleted}</if>-->
         </where>
         order by id desc
     </select>
@@ -24,12 +26,13 @@
         select
         <include refid="Base_Column_List" />
         from collect
-        where id = #{id}
+        where id = #{id} and deleted = 0
     </select>
 
     <delete id="deleteById">
-        delete from collect
-        where  id = #{id}
+        update collect
+        set deleted = 1
+        where id = #{id}
     </delete>
 
     <insert id="insert" parameterType="com.example.entity.Collect" useGeneratedKeys="true">
@@ -38,15 +41,18 @@
             <if test="id != null">id,</if>
             <if test="userId != null">user_id,</if>
             <if test="typeId != null">type_id,</if>
+            <if test="deleted != null">deleted,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="userId != null">#{userId},</if>
             <if test="typeId != null">#{typeId},</if>
+            <if test="deleted != null">#{deleted},</if>
+            <if test="deleted == null">0,</if>  <!-- 默认值为 0 -->
         </trim>
     </insert>
 
-    <update id="updateById" parameterType="com.example.entity.Admin">
+    <update id="updateById" parameterType="com.example.entity.Collect">
         update collect
         <set>
             <if test="userId != null">
@@ -54,6 +60,9 @@
             </if>
             <if test="typeId != null">
                 type_id = #{typeId},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted},
             </if>
         </set>
         where id = #{id}

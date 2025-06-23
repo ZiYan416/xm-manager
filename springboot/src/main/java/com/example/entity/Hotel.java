@@ -32,6 +32,8 @@ public class Hotel extends Account implements Serializable {
     /** 评论数量 */
     private Integer comments;
 
+    private Boolean deleted;
+
     @Override
     public Integer getId() {
         return id;
@@ -147,4 +149,8 @@ public class Hotel extends Account implements Serializable {
     public void setComments(Integer comments) {
         this.comments = comments;
     }
+
+    public Boolean getDeleted() {return deleted;}
+
+    public void setDeleted(Boolean deleted) {this.deleted = deleted;}
 }

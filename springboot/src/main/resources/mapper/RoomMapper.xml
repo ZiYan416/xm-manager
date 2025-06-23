@@ -5,34 +5,38 @@
 <mapper namespace="com.example.mapper.RoomMapper">
 
     <sql id="Base_Column_List">
-        id,name,status,type_id,hotel_id
+        id, name, status, type_id, hotel_id, deleted
     </sql>
 
     <select id="selectAll" resultType="com.example.entity.Room">
         select room.*, type.name as typeName, hotel.name as hotelName
         from room
-        left join type on room.type_id = type.id
-        left join hotel on room.hotel_id = hotel.id
+        left join type on room.type_id = type.id and type.deleted = 0
+        left join hotel on room.hotel_id = hotel.id and hotel.deleted = 0
         <where>
-            <if test="id != null"> and id= #{id}</if>
+            room.deleted=0
+            <if test="id != null"> and room.id = #{id}</if>
             <if test="name != null"> and room.name like concat('%', #{name}, '%')</if>
-            <if test="status != null"> and status= #{status}</if>
-            <if test="typeId != null"> and type_id= #{typeId}</if>
-            <if test="hotelId != null"> and room.hotel_id= #{hotelId}</if>
+            <if test="status != null"> and room.status = #{status}</if>
+            <if test="typeId != null"> and room.type_id = #{typeId}</if>
+            <if test="hotelId != null"> and room.hotel_id = #{hotelId}</if>
+<!--            <if test="deleted != null"> and room.deleted = #{deleted}</if>-->
         </where>
-        order by id desc
+        order by room.id desc
     </select>
 
     <select id="selectById" resultType="com.example.entity.Room">
-        select
-        <include refid="Base_Column_List" />
+        select room.*, type.name as typeName, hotel.name as hotelName
         from room
-        where id = #{id}
+                 left join type on room.type_id = type.id and type.deleted = 0
+                 left join hotel on room.hotel_id = hotel.id and hotel.deleted = 0
+        where room.id = #{id} and room.deleted = 0
     </select>
 
     <delete id="deleteById">
-        delete from room
-        where  id = #{id}
+        update room
+        set deleted = 1
+        where id = #{id}
     </delete>
 
     <insert id="insert" parameterType="com.example.entity.Room" useGeneratedKeys="true">
@@ -43,6 +47,7 @@
             <if test="status != null">status,</if>
             <if test="typeId != null">type_id,</if>
             <if test="hotelId != null">hotel_id,</if>
+            <if test="deleted != null">deleted,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -50,6 +55,8 @@
             <if test="status != null">#{status},</if>
             <if test="typeId != null">#{typeId},</if>
             <if test="hotelId != null">#{hotelId},</if>
+            <if test="deleted != null">#{deleted},</if>
+            <if test="deleted == null">0,</if>  <!-- 默认值为 0 -->
         </trim>
     </insert>
 
@@ -67,6 +74,9 @@
             </if>
             <if test="hotelId != null">
                 hotel_id = #{hotelId},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted},
             </if>
         </set>
         where id = #{id}

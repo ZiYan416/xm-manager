@@ -26,6 +26,8 @@ public class Checkin implements Serializable {
     private String userName;
     private String roomName;
 
+    private Boolean deleted;
+
     public Integer getId() {
         return id;
     }
@@ -121,4 +123,8 @@ public class Checkin implements Serializable {
     public void setRoomName(String roomName) {
         this.roomName = roomName;
     }
+
+    public Boolean getDeleted() {return deleted;}
+
+    public void setDeleted(Boolean deleted) {this.deleted = deleted;}
 }

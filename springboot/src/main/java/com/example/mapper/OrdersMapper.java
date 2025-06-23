@@ -35,6 +35,8 @@ public interface OrdersMapper {
     */
     List<Orders> selectAll(Orders orders);
 
+    List<Orders> selectAllPhysical(Orders orders); // 物理查询方法
+
     @Select("select * from orders where order_id = #{orderId}")
     Orders selectByOrderId(String orderId);
 }

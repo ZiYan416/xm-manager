@@ -5,7 +5,7 @@
 <mapper namespace="com.example.mapper.UserMapper">
 
     <sql id="Base_Column_List">
-        id,username,password,name,phone,email,avatar,role
+        id, username, password, name, phone, email, avatar, role, deleted
     </sql>
 
     <select id="selectAll" resultType="com.example.entity.User">
@@ -13,16 +13,32 @@
         <include refid="Base_Column_List" />
         from user
         <where>
-            <if test="id != null"> and id = #{id}</if>
-            <if test="username != null"> and username like concat('%', #{username}, '%')</if>
-            <if test="password != null"> and password = #{password}</if>
-            <if test="name != null"> and name = #{name}</if>
-            <if test="phone != null"> and phone = #{phone}</if>
-            <if test="email != null"> and email= #{email}</if>
-            <if test="avatar != null"> and avatar = #{avatar}</if>
-            <if test="role != null"> and role = #{role}</if>
+            user.deleted=0
+            <if test="id != null"> and user.id = #{id}</if>
+            <if test="username != null"> and user.username like concat('%', #{username}, '%')</if>
+            <if test="password != null"> and user.password = #{password}</if>
+            <if test="name != null"> and user.name = #{name}</if>
+            <if test="phone != null"> and user.phone = #{phone}</if>
+            <if test="email != null"> and user.email = #{email}</if>
+            <if test="avatar != null"> and user.avatar = #{avatar}</if>
+            <if test="role != null"> and user.role = #{role}</if>
+<!--            <if test="deleted != null"> and user.deleted = #{deleted}</if>-->
         </where>
+        order by user.id desc
     </select>
+
+    <select id="selectById" resultType="com.example.entity.User">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        where user.id = #{id} and user.deleted = 0
+    </select>
+
+    <delete id="deleteById">
+        update user
+        set deleted = 1
+        where id = #{id}
+    </delete>
 
     <insert id="insert" parameterType="com.example.entity.User" useGeneratedKeys="true">
         insert into user
@@ -35,6 +51,7 @@
             <if test="email != null">email,</if>
             <if test="avatar != null">avatar,</if>
             <if test="role != null">role,</if>
+            <if test="deleted != null">deleted,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -45,6 +62,8 @@
             <if test="email != null">#{email},</if>
             <if test="avatar != null">#{avatar},</if>
             <if test="role != null">#{role},</if>
+            <if test="deleted != null">#{deleted},</if>
+            <if test="deleted == null">0,</if>  <!-- 默认值为 0 -->
         </trim>
     </insert>
 
@@ -71,6 +90,9 @@
             </if>
             <if test="role != null">
                 role = #{role},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted},
             </if>
         </set>
         where id = #{id}

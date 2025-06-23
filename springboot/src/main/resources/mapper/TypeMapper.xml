@@ -5,34 +5,38 @@
 <mapper namespace="com.example.mapper.TypeMapper">
 
     <sql id="Base_Column_List">
-        id,name,description,price,num,hotel_id,img
+        id, name, description, price, num, hotel_id, img, deleted
     </sql>
 
     <select id="selectAll" resultType="com.example.entity.Type">
-        select type.*, hotel.name as hotelName from type
-        left join hotel on type.hotel_id = hotel.id
+        select type.*, hotel.name as hotelName
+        from type
+        left join hotel on type.hotel_id = hotel.id and hotel.deleted = 0
         <where>
-            <if test="id != null"> and id = #{id}</if>
+            type.deleted=0
+            <if test="id != null"> and type.id = #{id}</if>
             <if test="name != null"> and type.name like concat('%', #{name}, '%')</if>
-            <if test="description != null"> and description = #{description}</if>
+            <if test="description != null"> and type.description = #{description}</if>
             <if test="price != null"> and type.price = #{price}</if>
-            <if test="num != null"> and num = #{num}</if>
-            <if test="img != null"> and img = #{img}</if>
-            <if test="hotelId != null"> and hotel_id = #{hotelId}</if>
+            <if test="num != null"> and type.num = #{num}</if>
+            <if test="img != null"> and type.img = #{img}</if>
+            <if test="hotelId != null"> and type.hotel_id = #{hotelId}</if>
+<!--            <if test="deleted != null"> and type.deleted = #{deleted}</if>-->
         </where>
-        order by id desc
+        order by type.id desc
     </select>
 
     <select id="selectById" resultType="com.example.entity.Type">
         select type.*, hotel.name as hotelName
         from type
-        left join hotel on type.hotel_id = hotel.id
-        where type.id = #{id}
+                 left join hotel on type.hotel_id = hotel.id and hotel.deleted = 0
+        where type.id = #{id} and type.deleted = 0
     </select>
 
     <delete id="deleteById">
-        delete from type
-        where  id = #{id}
+        update type
+        set deleted = 1
+        where id = #{id}
     </delete>
 
     <insert id="insert" parameterType="com.example.entity.Type" useGeneratedKeys="true">
@@ -45,6 +49,7 @@
             <if test="num != null">num,</if>
             <if test="img != null">img,</if>
             <if test="hotelId != null">hotel_id,</if>
+            <if test="deleted != null">deleted,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -54,6 +59,8 @@
             <if test="num != null">#{num},</if>
             <if test="img != null">#{img},</if>
             <if test="hotelId != null">#{hotelId},</if>
+            <if test="deleted != null">#{deleted},</if>
+            <if test="deleted == null">0,</if>  <!-- 默认值为 0 -->
         </trim>
     </insert>
 
@@ -77,6 +84,9 @@
             </if>
             <if test="hotelId != null">
                 hotel_id = #{hotelId},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted},
             </if>
         </set>
         where id = #{id}

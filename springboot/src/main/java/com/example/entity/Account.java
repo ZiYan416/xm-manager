@@ -20,6 +20,9 @@ public class Account {
 
     private String token;
 
+    private Boolean deleted;
+
+
     public Integer getId() {
         return id;
     }
@@ -83,4 +86,8 @@ public class Account {
     public void setToken(String token) {
         this.token = token;
     }
+
+    public Boolean getDeleted() {return deleted;}
+
+    public void setDeleted(Boolean deleted) {this.deleted = deleted;}
 }
