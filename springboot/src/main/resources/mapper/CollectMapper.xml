@@ -22,6 +22,19 @@
         order by id desc
     </select>
 
+    <!-- 物理查询，不考虑 deleted 字段 -->
+    <select id="selectAllPhysical" resultType="com.example.entity.Collect">
+        select
+        <include refid="Base_Column_List" />
+        from collect
+        <where>
+            <if test="id != null"> and id = #{id}</if>
+            <if test="userId != null"> and user_id = #{userId}</if>
+            <if test="typeId != null"> and type_id = #{typeId}</if>
+        </where>
+        order by id desc
+    </select>
+
     <select id="selectById" resultType="com.example.entity.Collect">
         select
         <include refid="Base_Column_List" />
@@ -48,7 +61,6 @@
             <if test="userId != null">#{userId},</if>
             <if test="typeId != null">#{typeId},</if>
             <if test="deleted != null">#{deleted},</if>
-            <if test="deleted == null">0,</if>  <!-- 默认值为 0 -->
         </trim>
     </insert>
 

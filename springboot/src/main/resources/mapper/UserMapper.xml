@@ -27,6 +27,24 @@
         order by user.id desc
     </select>
 
+    <!-- 物理查询：查询所有记录，不考虑 deleted 字段 -->
+    <select id="selectAllPhysical" resultType="com.example.entity.User">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        <where>
+            <if test="id != null"> and user.id = #{id}</if>
+            <if test="username != null"> and user.username like concat('%', #{username}, '%')</if>
+            <if test="password != null"> and user.password = #{password}</if>
+            <if test="name != null"> and user.name = #{name}</if>
+            <if test="phone != null"> and user.phone = #{phone}</if>
+            <if test="email != null"> and user.email = #{email}</if>
+            <if test="avatar != null"> and user.avatar = #{avatar}</if>
+            <if test="role != null"> and user.role = #{role}</if>
+        </where>
+        order by user.id desc
+    </select>
+
     <select id="selectById" resultType="com.example.entity.User">
         select
         <include refid="Base_Column_List" />
@@ -63,7 +81,6 @@
             <if test="avatar != null">#{avatar},</if>
             <if test="role != null">#{role},</if>
             <if test="deleted != null">#{deleted},</if>
-            <if test="deleted == null">0,</if>  <!-- 默认值为 0 -->
         </trim>
     </insert>
 

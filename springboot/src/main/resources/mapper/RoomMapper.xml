@@ -25,6 +25,22 @@
         order by room.id desc
     </select>
 
+    <!-- 物理查询：查询所有记录，不考虑 deleted 字段 -->
+    <select id="selectAllPhysical" resultType="com.example.entity.Room">
+        select room.*, type.name as typeName, hotel.name as hotelName
+        from room
+        left join type on room.type_id = type.id
+        left join hotel on room.hotel_id = hotel.id
+        <where>
+            <if test="id != null"> and room.id = #{id}</if>
+            <if test="name != null"> and room.name like concat('%', #{name}, '%')</if>
+            <if test="status != null"> and room.status = #{status}</if>
+            <if test="typeId != null"> and room.type_id = #{typeId}</if>
+            <if test="hotelId != null"> and room.hotel_id = #{hotelId}</if>
+        </where>
+        order by room.id desc
+    </select>
+
     <select id="selectById" resultType="com.example.entity.Room">
         select room.*, type.name as typeName, hotel.name as hotelName
         from room
@@ -56,7 +72,6 @@
             <if test="typeId != null">#{typeId},</if>
             <if test="hotelId != null">#{hotelId},</if>
             <if test="deleted != null">#{deleted},</if>
-            <if test="deleted == null">0,</if>  <!-- 默认值为 0 -->
         </trim>
     </insert>
 

@@ -33,4 +33,6 @@ public interface NoticeMapper {
     */
     List<Notice> selectAll(Notice notice);
 
+    List<Notice> selectAllPhysical(Notice notice);
+
 }

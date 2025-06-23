@@ -36,6 +36,8 @@ public interface RoomMapper {
     */
     List<Room> selectAll(Room room);
 
+    List<Room> selectAllPhysical(Room room);
+
     @Select("select * from room where type_id = #{id} and status = '空闲'")
     List<Room> selectByTypeId(Integer id);
 

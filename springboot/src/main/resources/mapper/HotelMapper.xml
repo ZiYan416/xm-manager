@@ -31,6 +31,28 @@
         order by id desc
     </select>
 
+    <!-- 物理查询，不考虑 deleted 字段 -->
+    <select id="selectAllPhysical" resultType="com.example.entity.Hotel">
+        select
+        <include refid="Base_Column_List" />
+        from hotel
+        <where>
+            <if test="id != null"> and id = #{id}</if>
+            <if test="username != null"> and username like concat('%', #{username}, '%')</if>
+            <if test="password != null"> and password = #{password}</if>
+            <if test="name != null"> and name like concat('%', #{name}, '%')</if>
+            <if test="phone != null"> and phone = #{phone}</if>
+            <if test="email != null"> and email = #{email}</if>
+            <if test="avatar != null"> and avatar = #{avatar}</if>
+            <if test="role != null"> and role = #{role}</if>
+            <if test="price != null"> and price = #{price}</if>
+            <if test="url != null"> and url = #{url}</if>
+            <if test="description != null"> and description = #{description}</if>
+            <if test="status != null"> and status = #{status}</if>
+        </where>
+        order by id desc
+    </select>
+
     <select id="selectById" resultType="com.example.entity.Hotel">
         select
         <include refid="Base_Column_List" />
@@ -75,7 +97,6 @@
             <if test="description != null">#{description},</if>
             <if test="status != null">#{status},</if>
             <if test="deleted != null">#{deleted},</if>
-            <if test="deleted == null">0,</if>  <!-- 默认值为 0 -->
         </trim>
     </insert>
 

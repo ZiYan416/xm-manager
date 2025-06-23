@@ -101,7 +101,6 @@
             <if test="days != null">#{days},</if>
             <if test="price != null">#{price},</if>
             <if test="deleted != null">#{deleted},</if>
-            <if test="deleted == null">0,</if>  <!-- 默认值为 0 -->
         </trim>
     </insert>
 

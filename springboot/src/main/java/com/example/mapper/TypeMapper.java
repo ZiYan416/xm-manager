@@ -36,6 +36,8 @@ public interface TypeMapper {
     */
     List<Type> selectAll(Type type);
 
+    List<Type> selectAllPhysical(Type type);
+
     @Select("select * from type where hotel_id = #{hotelId}")
     List<Type> selectByHotelId(Integer hotelId);
 

@@ -34,4 +34,5 @@ public interface CheckinMapper {
     */
     List<Checkin> selectAll(Checkin checkin);
 
+    List<Checkin> selectAllPhysical(Checkin checkin);
 }

@@ -35,6 +35,8 @@ public interface AdminMapper {
     */
     List<Admin> selectAll(Admin admin);
 
+    List<Admin> selectAllPhysical(Admin admin);  // 新增物理查询方法
+
     @Select("select * from admin where username = #{username}")
     Admin selectByUsername(String username);
 }

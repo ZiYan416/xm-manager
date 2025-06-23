@@ -20,6 +20,8 @@ public interface UserMapper {
 
     List<User> selectAll(User user);
 
+    List<User> selectAllPhysical(User user);
+
     void updateById(User user);
 
     void deleteById(Integer id);

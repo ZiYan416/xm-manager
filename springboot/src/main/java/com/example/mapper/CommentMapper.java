@@ -36,6 +36,8 @@ public interface CommentMapper {
     */
     List<Comment> selectAll(Comment comment);
 
+    List<Comment> selectAllPhysical(Comment comment);
+
     @Select("select * from comment where type_id = #{typeId} and parent_id = #{parentId}")
     List<Comment> selectByTypeIdAndParentId(@Param("typeId") Integer typeId, @Param("parentId") Integer parentId);
 }

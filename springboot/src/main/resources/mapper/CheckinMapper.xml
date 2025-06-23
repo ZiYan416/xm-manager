@@ -31,6 +31,27 @@
         order by checkin.id desc
     </select>
 
+    <!-- 物理查询所有入住登记记录，不考虑 deleted 字段 -->
+    <select id="selectAllPhysical" resultType="com.example.entity.Checkin">
+        select checkin.*, type.name as typeName, hotel.name as hotelName, user.name as userName, room.name as roomName
+        from checkin
+        left join type on checkin.type_id = type.id
+        left join hotel on checkin.hotel_id = hotel.id
+        left join user on checkin.user_id = user.id
+        left join room on checkin.room_id = room.id
+        <where>
+            <if test="id != null"> and checkin.id = #{id}</if>
+            <if test="orderId != null"> and checkin.order_id like concat('%', #{orderId}, '%')</if>
+            <if test="typeId != null"> and checkin.type_id = #{typeId}</if>
+            <if test="hotelId != null"> and checkin.hotel_id = #{hotelId}</if>
+            <if test="userId != null"> and checkin.user_id = #{userId}</if>
+            <if test="inTime != null"> and checkin.in_time = #{inTime}</if>
+            <if test="outTime != null"> and checkin.out_time = #{outTime}</if>
+            <if test="roomId != null"> and checkin.room_id = #{roomId}</if>
+        </where>
+        order by checkin.id desc
+    </select>
+
     <!-- 根据 ID 查询入住登记记录 -->
     <select id="selectById" resultType="com.example.entity.Checkin">
         select checkin.*, type.name as typeName, hotel.name as hotelName, user.name as userName, room.name as roomName
@@ -73,7 +94,6 @@
             <if test="outTime != null">#{outTime},</if>
             <if test="roomId != null">#{roomId},</if>
             <if test="deleted != null">#{deleted},</if>
-            <if test="deleted == null">0,</if>  <!-- 默认值为 0 -->
         </trim>
     </insert>
 

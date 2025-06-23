@@ -29,6 +29,26 @@
         order by comment.id desc
     </select>
 
+    <!-- 物理查询，不考虑 deleted 字段 -->
+    <select id="selectAllPhysical" resultType="com.example.entity.Comment">
+        select comment.*, type.name as typeName, hotel.name as hotelName, user.name as userName
+        from comment
+        left join type on comment.type_id = type.id
+        left join hotel on comment.hotel_id = hotel.id
+        left join user on comment.user_id = user.id
+        <where>
+            <if test="id != null"> and comment.id = #{id}</if>
+            <if test="content != null"> and comment.content like concat('%', #{content}, '%')</if>
+            <if test="time != null"> and comment.time = #{time}</if>
+            <if test="typeId != null"> and comment.type_id = #{typeId}</if>
+            <if test="hotelId != null"> and comment.hotel_id = #{hotelId}</if>
+            <if test="userId != null"> and comment.user_id = #{userId}</if>
+            <if test="parentId != null"> and comment.parent_id = #{parentId}</if>
+            <if test="role != null"> and comment.role = #{role}</if>
+        </where>
+        order by comment.id desc
+    </select>
+
     <select id="selectById" resultType="com.example.entity.Comment">
         select comment.*, type.name as typeName, hotel.name as hotelName, user.name as userName
         from comment
@@ -67,7 +87,6 @@
             <if test="parentId != null">#{parentId},</if>
             <if test="role != null">#{role},</if>
             <if test="deleted != null">#{deleted},</if>
-            <if test="deleted == null">0,</if>  <!-- 默认值为 0 -->
         </trim>
     </insert>
 

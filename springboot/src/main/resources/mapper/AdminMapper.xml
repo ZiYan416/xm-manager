@@ -8,6 +8,7 @@
         id, username, password, name, phone, email, avatar, role, deleted
     </sql>
 
+    <!-- 逻辑查询：查询未被删除的记录 -->
     <select id="selectAll" resultType="com.example.entity.Admin">
         select
         <include refid="Base_Column_List" />
@@ -22,7 +23,23 @@
             <if test="email != null"> and email = #{email}</if>
             <if test="avatar != null"> and avatar = #{avatar}</if>
             <if test="role != null"> and role = #{role}</if>
-<!--            <if test="deleted != null"> and deleted = #{deleted}</if>-->
+        </where>
+    </select>
+
+    <!-- 物理查询：查询所有记录，不考虑 deleted 字段 -->
+    <select id="selectAllPhysical" resultType="com.example.entity.Admin">
+        select
+        <include refid="Base_Column_List" />
+        from admin
+        <where>
+            <if test="id != null"> and id = #{id}</if>
+            <if test="username != null"> and username like concat('%', #{username}, '%')</if>
+            <if test="password != null"> and password = #{password}</if>
+            <if test="name != null"> and name = #{name}</if>
+            <if test="phone != null"> and phone = #{phone}</if>
+            <if test="email != null"> and email = #{email}</if>
+            <if test="avatar != null"> and avatar = #{avatar}</if>
+            <if test="role != null"> and role = #{role}</if>
         </where>
     </select>
 
@@ -60,7 +77,6 @@
             <if test="avatar != null">#{avatar},</if>
             <if test="role != null">#{role},</if>
             <if test="deleted != null">#{deleted},</if>
-            <if test="deleted == null">0,</if>  <!-- 默认 added -->
         </trim>
     </insert>
 

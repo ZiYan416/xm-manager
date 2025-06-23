@@ -20,6 +20,8 @@ public interface HotelMapper {
 
     List<Hotel> selectAll(Hotel hotel);
 
+    List<Hotel> selectAllPhysical(Hotel hotel);
+
     void updateById(Hotel hotel);
 
     void deleteById(Integer id);
