@@ -96,5 +96,12 @@ public class OrdersController {
         return Result.success(orders);
     }
 
-
+    /**
+     * 根据 order_id 查询订单信息
+     */
+    @GetMapping("/selectByOrderId")
+    public Result selectByOrderId(@RequestParam String orderId) {
+        Orders orders = ordersService.selectByOrderId(orderId);
+        return Result.success(orders);
+    }
 }

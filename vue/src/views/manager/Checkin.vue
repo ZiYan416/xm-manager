@@ -100,11 +100,36 @@ export default {
         }
       })
     },
+    // 新增一个方法用于获取订单详情
+    getOrderDetails(orderId) {
+      this.$request.get(`/orders/selectByOrderId?orderId=${orderId}`).then(res => {
+        console.log("后端返回的数据:", res); // 打印后端返回的数据，方便调试
+        if (res.code === '200') {
+          const orderDetails = res.data;
+          // 获取订单的预定入住时间
+          const reservedInTime = new Date(orderDetails.inTime);
+          const today = new Date();
+          today.setHours(0, 0, 0, 0); // 将当前时间设置为当天的0点
+
+          // 比较当前日期和预定入住时间
+          if (today < reservedInTime) {
+            this.$message.warning(`当前日期未到订单的预定入住时间（${orderDetails.inTime}），无法进行入住登记！`);
+            this.form.inTime = null; // 清空入住时间
+          } else {
+            this.form.inTime = this.getTodayDate(); // 设置入住时间为今天
+          }
+        } else {
+          this.$message.error(res.msg);
+        }
+      }).catch(() => {
+        this.$message.error('获取订单详情失败');
+      });
+    },
     loadRoomData(orderId) {
       this.$request.get('/room/selectByTypeId?orderId=' + orderId).then(res => {
         if (res.code === '200') {
           this.roomData = res.data
-          this.form.inTime = this.getTodayDate();
+          this.getOrderDetails(orderId);
         } else {
           this.$message.error(res.msg)
         }

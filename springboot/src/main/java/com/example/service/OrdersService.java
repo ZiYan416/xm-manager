@@ -149,4 +149,8 @@ public class OrdersService {
         orders.setStatus(OrdersEnum.STATUS_CHECKING.status);
         return ordersMapper.selectAll(orders);
     }
+
+    public Orders selectByOrderId(String orderId) {
+        return ordersMapper.selectByOrderId(orderId);
+    }
 }
