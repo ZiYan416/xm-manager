@@ -40,7 +40,7 @@ public class HotelService {
             hotel.setRole(RoleEnum.HOTEL.name());
         }
         if (ObjectUtil.isEmpty(hotel.getAvatar())) {
-            hotel.setAvatar("http://localhost:9091/files/1697438073596-avatar.png");
+            hotel.setAvatar("http://46.3.216.73:38597/files/1697438073596-avatar.png");
         }
         hotel.setStatus(StatusEnum.CHECKING.status);
         hotelMapper.insert(hotel);

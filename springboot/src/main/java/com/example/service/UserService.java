@@ -42,7 +42,10 @@ public class UserService {
             user.setRole(RoleEnum.USER.name());
         }
         if (ObjectUtil.isEmpty(user.getAvatar())) {
-            user.setAvatar("http://localhost:9091/files/1697438073596-avatar.png");
+            user.setAvatar("http://46.3.216.73:38597/files/1697438073596-avatar.png");
+        }
+        if (ObjectUtil.isEmpty(user.getName())) {
+            user.setName(user.getUsername());
         }
         userMapper.insert(user);
     }

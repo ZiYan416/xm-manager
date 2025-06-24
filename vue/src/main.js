@@ -14,6 +14,10 @@ Vue.prototype.$baseUrl = process.env.VUE_APP_BASEURL
 
 Vue.use(ElementUI, {size: "small"})
 
+// 引入全局组件
+import SakuraEffect from '/src/components/SakuraEffect.vue'
+Vue.component('SakuraEffect', SakuraEffect);
+
 new Vue({
     router,
     render: h => h(App)

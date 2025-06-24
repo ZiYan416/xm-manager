@@ -1,6 +1,6 @@
 <template>
   <div class="main-content">
-    <div style="position: absolute; font-size: calc(100vw * 40 / 1920); font-weight: bold; color: white; font-style: italic; top: 200px; left: 200px">旅行订酒店，就上你好酒店预订网.</div>
+    <div style="position: absolute; font-size: 40px; font-weight: bold; color: white; font-style: italic; top: 200px; left: 200px">旅行订酒店，就上你好酒店预订网.</div>
     <div>
       <img src="@/assets/imgs/carousel.jpg" style="width: 100%; height: 300px; border-bottom-left-radius: 40%; border-bottom-right-radius: 40%" alt="">
     </div>
