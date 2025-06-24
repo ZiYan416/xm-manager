@@ -193,10 +193,26 @@
     <el-dialog title="请选择时间" :visible.sync="fromVisible" width="25%" :close-on-click-modal="false" destroy-on-close>
       <el-form label-width="100px" style="padding-right: 50px">
         <el-form-item prop="inTime" label="入住时间">
-          <el-date-picker v-model="inTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 100%"></el-date-picker>
+          <el-date-picker
+              v-model="inTime"
+              type="date"
+              placeholder="选择日期"
+              value-format="yyyy-MM-dd"
+              style="width: 100%"
+              :disabledDate="disabledDate"
+              :picker-options="pickerOptions"
+          ></el-date-picker>
         </el-form-item>
         <el-form-item prop="outTime" label="离开时间">
-          <el-date-picker v-model="outTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 100%"></el-date-picker>
+          <el-date-picker
+              v-model="outTime"
+              type="date"
+              placeholder="选择日期"
+              value-format="yyyy-MM-dd"
+              style="width: 100%"
+              :disabledDate="disabledDate"
+              :picker-options="pickerOptions"
+          ></el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -222,6 +238,10 @@ export default {
       outTime: null,
       fromVisible: false,
       commentData: [],
+      pickerOptions: {
+        disabledDate: this.disabledDate,
+        firstDayOfWeek: 1, // 设置每周的第一天为周一
+      },
     }
   },
   mounted() {
@@ -284,22 +304,47 @@ export default {
       this.fromVisible = true
     },
     save() {
+      if (!this.inTime || !this.outTime) {
+        this.$message.error('请完整选择入住和离开日期');
+        return;
+      }
+
+      if (new Date(this.inTime).getTime() >= new Date(this.outTime).getTime()) {
+        this.$message.error('入住日期不能晚于或等于离开日期');
+        return;
+      }
+
       let data = {
         userId: this.user.id,
         typeId: this.typeId,
         hotelId: this.typeData.hotelId,
         inTime: this.inTime,
         outTime: this.outTime
-      }
+      };
+
       this.$request.post('/orders/add', data).then(res => {
         if (res.code === '200') {
-          this.$message.success('预订成功')
-          this.fromVisible = false
+          this.$message.success('预订成功');
+          this.fromVisible = false;
         } else {
-          this.$message.error(res.msg)
+          this.$message.error(res.msg);
         }
-      })
-    }
+      });
+    },
+    disabledDate(time) {
+      // 获取今天的日期（不包含时间）
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // 将时间设置为今天的0点
+      // 禁用今天之前的日期
+      if (time.getTime() < today.getTime()) {
+        return true;
+      }
+      // 如果已经选择了入住日期，离开日期不能早于入住日期
+      if (this.inTime && this.outTime && time.getTime() < new Date(this.inTime).getTime()) {
+        return true;
+      }
+      return false;
+    },
   }
 }
 </script>

@@ -55,7 +55,7 @@
           </el-select>
         </el-form-item>
         <el-form-item prop="inTime" label="入住时间">
-          <el-date-picker v-model="form.inTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 100%"></el-date-picker>
+          <el-date-picker v-model="form.inTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 100%" disabled="true"></el-date-picker>
         </el-form-item>
       </el-form>
 
@@ -104,10 +104,18 @@ export default {
       this.$request.get('/room/selectByTypeId?orderId=' + orderId).then(res => {
         if (res.code === '200') {
           this.roomData = res.data
+          this.form.inTime = this.getTodayDate();
         } else {
           this.$message.error(res.msg)
         }
       })
+    },
+    getTodayDate() {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
     },
     handleAdd() {   // 新增数据
       this.form = {}  // 新增数据的时候清空数据
