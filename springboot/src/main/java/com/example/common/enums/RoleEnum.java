@@ -7,4 +7,6 @@ public enum RoleEnum {
     HOTEL,
     // 用户
     USER,
+
+    SHENHE
 }

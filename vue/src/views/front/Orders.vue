@@ -24,7 +24,7 @@
         <el-table-column label="操作" width="180" align="center">
           <template v-slot="scope">
             <el-button plain type="primary" size="mini" @click="comment(scope.row)" v-if="scope.row.status === '已退房'">评价</el-button>
-            <el-button plain type="danger" size="mini" @click=del(scope.row.id)>删除</el-button>
+            <el-button plain type="danger" size="mini" @click=del(scope.row.id)>取消订单</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -122,8 +122,8 @@ export default {
       this.$confirm('您确定删除吗？', '确认删除', {type: "warning"}).then(response => {
         this.$request.delete('/orders/delete/' + id).then(res => {
           if (res.code === '200') {   // 表示操作成功
-            this.$message.success('操作成功')
-            this.load(1)
+            this.$message.success('操作成功，退款预计2个工作日内到账！')
+            this.loadOrders(1)  // 替换为正确的 this.loadOrders(1)
           } else {
             this.$message.error(res.msg)  // 弹出错误的信息
           }

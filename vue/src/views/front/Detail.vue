@@ -145,48 +145,60 @@
       </div>
       <div style=" font-weight: 700; font-size: 16px; padding: 15px 30px; margin-top: 20px; border-bottom: 1px solid #eeeeee">评论信息</div>
       <div style="margin-top: 10px; padding: 0 70px; margin-bottom: 1000px">
-        <div style="margin: 20px 0" v-for="item in commentData">
-          <el-row :gutter="20">
-            <el-col :span="4">
-              <div style="display: flex; align-items: center;">
-                <img :src="item.avatar" alt="" style="height: 50px; width: 50px; border-radius: 50%">
-                <div style="flex: 1; margin-left: 10px; color: #5E5C5CFF">{{item.userName}}</div>
-              </div>
-            </el-col>
-            <el-col :span="20">
-              <el-row :gutter="20">
-                <el-col :span="20">
-                  <div style="height: 50px; line-height: 50px">{{item.content}}</div>
-                </el-col>
-                <el-col :span="4">
-                  <div style="height: 50px; line-height: 50px; text-align: right">{{item.time}}</div>
-                </el-col>
-              </el-row>
-              <!--  回复-->
-              <el-row :gutter="20" style="margin-top: 15px" v-for="child in item.children">
-                <el-col :span="5">
-                  <div style="display: flex; align-items: center;">
-                    <img :src="child.avatar" alt="" style="height: 50px; width: 50px; border-radius: 50%">
-                    <div style="flex: 1; margin-left: 10px; color: #5E5C5CFF">{{child.userName}} <span style="font-weight: bold">回复：</span></div>
-                  </div>
-                </el-col>
-                <el-col :span="16">
-                  <div style="height: 50px; line-height: 50px">{{child.content}}</div>
-                </el-col>
-                <el-col :span="4">
-                  <div style="height: 50px; line-height: 50px; text-align: right">{{child.time}}</div>
-                </el-col>
-              </el-row>
-              <!-- 回复评论框框 -->
-              <el-row :gutter="20" style="margin-top: 20px">
-                <el-col :span="20">
-                  <el-input style="width: 70%" v-model="item.reply"></el-input>
-                  <el-button type="primary" style="margin-left: 15px" @click="replyComment(item.id, item.reply)">回复</el-button>
-                </el-col>
-                <el-col :span="4"></el-col>
-              </el-row>
-            </el-col>
-          </el-row>
+        <div style="margin: 20px 0" v-for="item in commentData" :key="item.id">
+          <el-card class="comment-card">
+            <el-row :gutter="20">
+              <el-col :span="4">
+                <div style="display: flex; align-items: center;">
+                  <el-avatar :src="item.avatar" style="height: 50px; width: 50px; border-radius: 50%"></el-avatar>
+                  <div style="flex: 1; margin-left: 10px; color: #5E5C5CFF">{{ item.userName }}</div>
+                </div>
+              </el-col>
+              <el-col :span="20">
+                <el-row :gutter="20">
+                  <el-col :span="20">
+                    <div style="height: 50px; line-height: 50px">{{ item.content }}</div>
+                  </el-col>
+                  <el-col :span="4">
+                    <div style="height: 50px; line-height: 50px; text-align: right">{{ item.time }}</div>
+                  </el-col>
+                </el-row>
+                <!-- 回复 -->
+                <el-row :gutter="20" style="margin-top: 15px" v-for="child in item.children" :key="child.id">
+                  <el-col :span="5">
+                    <div style="display: flex; align-items: center;">
+                      <el-avatar :src="child.avatar" style="height: 50px; width: 50px; border-radius: 50%"></el-avatar>
+                      <div style="flex: 1; margin-left: 10px; color: #5E5C5CFF">{{ child.userName }} <span style="font-weight: bold">回复：</span></div>
+                    </div>
+                  </el-col>
+                  <el-col :span="16">
+                    <div style="height: 50px; line-height: 50px">{{ child.content }}</div>
+                  </el-col>
+                  <el-col :span="4">
+                    <div style="height: 50px; line-height: 50px; text-align: right">{{ child.time }}</div>
+                  </el-col>
+                </el-row>
+                <!-- 回复评论框 -->
+                <el-row :gutter="20" style="margin-top: 20px">
+                  <el-col :span="20">
+                    <el-input
+                        style="width: 70%"
+                        v-model="item.reply"
+                        placeholder="请输入回复内容"
+                    ></el-input>
+                    <el-button
+                        type="primary"
+                        style="margin-left: 15px"
+                        @click="replyComment(item.id, item.reply)"
+                    >
+                      回复
+                    </el-button>
+                  </el-col>
+                  <el-col :span="4"></el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+          </el-card>
         </div>
       </div>
     </div>
@@ -220,6 +232,23 @@
         <el-button type="primary" @click="save">确 定</el-button>
       </div>
     </el-dialog>
+    <el-dialog
+        title="支付确认"
+        :visible.sync="paymentDialogVisible"
+        width="30%"
+        :close-on-click-modal="false"
+        destroy-on-close
+    >
+      <div style="text-align: center">
+        <img src="@/assets/imgs/付款码.jpg" alt="支付二维码" style="width: 300px; height: auto; margin-bottom: 20px" />
+        <p>请扫描二维码完成支付</p>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="paymentDialogVisible = false">取消</el-button>
+        <el-button type="success" @click="submitOrder">支付成功</el-button>
+        <el-button type="danger" @click="paymentFailed">支付失败</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -242,6 +271,7 @@ export default {
         disabledDate: this.disabledDate,
         firstDayOfWeek: 1, // 设置每周的第一天为周一
       },
+      paymentDialogVisible: false, // 控制支付窗口的显示状态
     }
   },
   mounted() {
@@ -314,6 +344,13 @@ export default {
         return;
       }
 
+      // 弹出支付窗口
+      this.showPaymentDialog();
+    },
+    showPaymentDialog() {
+      this.paymentDialogVisible = true;
+    },
+    submitOrder() {
       let data = {
         userId: this.user.id,
         typeId: this.typeId,
@@ -325,7 +362,8 @@ export default {
       this.$request.post('/orders/add', data).then(res => {
         if (res.code === '200') {
           this.$message.success('预订成功');
-          this.fromVisible = false;
+          this.paymentDialogVisible = false; // 关闭支付窗口
+          this.fromVisible = false; // 关闭日期选择窗口
         } else {
           this.$message.error(res.msg);
         }
@@ -345,6 +383,33 @@ export default {
       }
       return false;
     },
+    paymentFailed() {
+      this.paymentDialogVisible = false; // 关闭支付窗口
+      this.$message.error('支付失败，订单未创建');
+    },
   }
 }
 </script>
+
+<style>
+.comment-card {
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 2px 6px 15px #000000; /* 增强阴影效果 */
+  background-color: #fff; /* 添加背景颜色 */
+  border: 1px solid rgba(1,1,1,0.2); /* 添加边框 */
+}
+
+.comment-card .el-avatar {
+  background-color: #f5f5f5;
+}
+
+.comment-card .el-input__inner {
+  border-radius: 5px;
+}
+
+.comment-card .el-button {
+  border-radius: 5px;
+}
+</style>

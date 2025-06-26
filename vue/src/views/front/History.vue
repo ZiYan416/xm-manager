@@ -10,11 +10,11 @@
         <el-table-column prop="inTime" label="入住时间"></el-table-column>
         <el-table-column prop="outTime" label="退房时间"></el-table-column>
 
-        <el-table-column label="操作" width="180" align="center">
-          <template v-slot="scope">
-            <el-button plain type="danger" size="mini" @click=del(scope.row.id)>取消订单</el-button>
-          </template>
-        </el-table-column>
+<!--        <el-table-column label="操作" width="180" align="center">-->
+<!--          <template v-slot="scope">-->
+<!--            <el-button plain type="danger" size="mini" @click=del(scope.row.id)>删除</el-button>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
       </el-table>
 
       <div class="pagination" style="margin-top: 20px">

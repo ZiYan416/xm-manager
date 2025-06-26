@@ -16,6 +16,7 @@
         </el-form-item>
         <el-form-item prop="role">
           <el-select v-model="form.role" placeholder="请选择角色" style="width: 100%">
+            <el-option label="酒店审核" value="SHENHE"></el-option>
             <el-option label="酒店" value="HOTEL"></el-option>
             <el-option label="用户" value="USER"></el-option>
           </el-select>
@@ -38,7 +39,7 @@
 import {
   validateUsername,
   validatePassword
-} from '@/utils/validation'; // 假设你的验证规则文件路径为 @/utils/validation
+} from '@/utils/validation';
 
 export default {
   name: "Register",
