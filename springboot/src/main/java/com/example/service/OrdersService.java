@@ -155,4 +155,8 @@ public class OrdersService {
     public List<FinanceStatistics> selectFinanceStatistics(String startDate, String endDate, Integer hotelId) {
         return ordersMapper.selectFinanceStatistics(startDate, endDate, hotelId);
     }
+
+    public List<FinanceStatistics> selectAllHotelsFinanceStatistics(String startDate, String endDate) {
+        return ordersMapper.selectAllHotelsFinanceStatistics(startDate, endDate);
+    }
 }

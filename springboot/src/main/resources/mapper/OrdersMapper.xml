@@ -155,11 +155,36 @@
                 LEFT JOIN
             type t ON o.type_id = t.id
         WHERE
-            o.deleted = 0 AND
-            o.in_time BETWEEN #{startDate} AND #{endDate} AND
-            o.hotel_id = #{hotelId}
+            o.deleted = 0
+          AND o.hotel_id = #{hotelId}
+          AND (
+            (#{startDate} IS NULL AND #{endDate} IS NULL)
+                OR
+            (o.in_time BETWEEN COALESCE(#{startDate}, '1900-01-01') AND COALESCE(#{endDate}, '2999-12-31'))
+            )
         GROUP BY
             t.id
     </select>
 
+    <select id="selectAllHotelsFinanceStatistics" resultType="com.example.entity.FinanceStatistics">
+        SELECT
+            h.id AS hotelId,
+            h.name AS hotelName,
+            COUNT(o.id) AS orderCount,
+            SUM(o.price) AS totalIncome
+        FROM
+            orders o
+                LEFT JOIN
+            hotel h ON o.hotel_id = h.id
+        WHERE
+            o.deleted = 0
+          AND h.status = '审核通过'
+          AND (
+            (#{startDate} IS NULL AND #{endDate} IS NULL)
+                OR
+            (o.in_time BETWEEN COALESCE(#{startDate}, '1900-01-01') AND COALESCE(#{endDate}, '2999-12-31'))
+            )
+        GROUP BY
+            h.id
+    </select>
 </mapper>

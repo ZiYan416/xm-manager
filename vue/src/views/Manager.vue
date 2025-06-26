@@ -48,6 +48,7 @@
             <el-menu-item index="/room">客房信息</el-menu-item>
             <el-menu-item index="/orders">订单信息</el-menu-item>
             <el-menu-item index="/checkin">入住登记</el-menu-item>
+            <el-menu-item index="/finance">财务管理</el-menu-item>
             <el-menu-item v-if="user.role === 'ADMIN'" index="/comment">评论管理</el-menu-item>
           </el-submenu>
 

@@ -42,8 +42,10 @@ public interface OrdersMapper {
     @Select("select * from orders where order_id = #{orderId}")
     Orders selectByOrderId(String orderId);
 
-    List<FinanceStatistics> selectFinanceStatistics(
-            @Param("startDate") String startDate,
-            @Param("endDate") String endDate,
-            @Param("hotelId") Integer hotelId);
+    List<FinanceStatistics> selectFinanceStatistics(@Param("startDate") String startDate,
+                                                    @Param("endDate") String endDate,
+                                                    @Param("hotelId") Integer hotelId);
+
+    List<FinanceStatistics> selectAllHotelsFinanceStatistics(@Param("startDate") String startDate,
+                                                             @Param("endDate") String endDate);
 }

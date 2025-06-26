@@ -102,8 +102,16 @@ public class OrdersController {
     public Result selectFinanceStatistics(
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
-            @RequestParam(required = false) Integer hotelId) {
-        List<FinanceStatistics> statistics = ordersService.selectFinanceStatistics(startDate, endDate, hotelId);
+            @RequestParam(required = false) Integer hotelId,
+            @RequestParam(required = false) String role) {
+        List<FinanceStatistics> statistics;
+        if ("ADMIN".equals(role)) {
+            // 管理员查询所有酒店的财务统计
+            statistics = ordersService.selectAllHotelsFinanceStatistics(startDate, endDate);
+        } else {
+            // 普通用户查询指定酒店的财务统计
+            statistics = ordersService.selectFinanceStatistics(startDate, endDate, hotelId);
+        }
         return Result.success(statistics);
     }
 }
