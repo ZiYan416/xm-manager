@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
 
+import com.example.entity.FinanceStatistics;
+
 /**
  * 订单信息表前端操作接口
  **/
@@ -96,5 +98,12 @@ public class OrdersController {
         return Result.success(orders);
     }
 
-
+    @GetMapping("/selectFinanceStatistics")
+    public Result selectFinanceStatistics(
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
+            @RequestParam(required = false) Integer hotelId) {
+        List<FinanceStatistics> statistics = ordersService.selectFinanceStatistics(startDate, endDate, hotelId);
+        return Result.success(statistics);
+    }
 }

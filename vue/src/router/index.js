@@ -30,6 +30,7 @@ const routes = [
       { path: 'orders', name: 'Orders', meta: { name: '订单信息' }, component: () => import('../views/manager/Orders') },
       { path: 'checkin', name: 'Checkin', meta: { name: '入住登记' }, component: () => import('../views/manager/Checkin') },
       { path: 'comment', name: 'Comment', meta: { name: '评论管理' }, component: () => import('../views/manager/Comment') },
+      { path: 'finance', name: 'Finance', meta: { name: '财务管理' }, component: () => import('../views/manager/Finance') },
     ]
   },
   {

@@ -25,6 +25,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.example.entity.FinanceStatistics;
+
 /**
  * 订单信息表业务处理
  **/
@@ -148,5 +150,9 @@ public class OrdersService {
         orders.setHotelId(id);
         orders.setStatus(OrdersEnum.STATUS_CHECKING.status);
         return ordersMapper.selectAll(orders);
+    }
+
+    public List<FinanceStatistics> selectFinanceStatistics(String startDate, String endDate, Integer hotelId) {
+        return ordersMapper.selectFinanceStatistics(startDate, endDate, hotelId);
     }
 }

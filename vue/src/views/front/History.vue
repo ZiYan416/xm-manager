@@ -12,7 +12,7 @@
 
         <el-table-column label="操作" width="180" align="center">
           <template v-slot="scope">
-            <el-button plain type="danger" size="mini" @click=del(scope.row.id)>删除</el-button>
+            <el-button plain type="danger" size="mini" @click=del(scope.row.id)>取消订单</el-button>
           </template>
         </el-table-column>
       </el-table>

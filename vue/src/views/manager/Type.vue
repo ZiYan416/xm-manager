@@ -101,24 +101,6 @@ export default {
       rules: {
         username: [
           {required: true, message: '请输入账号', trigger: 'blur'},
-        ],
-        name: [
-          { required: true, message: '请输入分类名称', trigger: 'blur' },
-          { validator: validation.noblankInput, message: '禁止非法空格', trigger: 'input' }
-        ],
-        description: [
-          { required: true, message: '请输入分类描述', trigger: 'blur' }
-        ],
-        price: [
-          { required: true, message: '请输入价格', trigger: 'blur' },
-          { validator: (rule, value, callback) => {
-              if (!validation.numInput(value)) {
-                callback(new Error('价格必须是数字'));
-              } else {
-                callback();
-              }
-            }, trigger: 'blur'
-          }
         ]
       },
       ids: []
@@ -129,17 +111,12 @@ export default {
   },
   methods: {
     handleAdd() {   // 新增数据
-      this.form = {
-        price: 0  // 初始化价格为0
-      };
-      this.fromVisible = true;   // 打开弹窗
+      this.form = {}  // 新增数据的时候清空数据
+      this.fromVisible = true   // 打开弹窗
     },
     handleEdit(row) {   // 编辑数据
-      this.form = JSON.parse(JSON.stringify(row));
-      if (!this.form.price) {
-        this.form.price = 0;  // 如果价格为空，初始化为0
-      }
-      this.fromVisible = true;   // 打开弹窗
+      this.form = JSON.parse(JSON.stringify(row))  // 给form对象赋值  注意要深拷贝数据
+      this.fromVisible = true   // 打开弹窗
     },
     save() {   // 保存按钮触发的逻辑  它会触发新增或者更新
       this.$refs.formRef.validate((valid) => {
@@ -150,15 +127,15 @@ export default {
             data: this.form
           }).then(res => {
             if (res.code === '200') {  // 表示成功保存
-              this.$message.success('保存成功');
-              this.load(1);
-              this.fromVisible = false;
+              this.$message.success('保存成功')
+              this.load(1)
+              this.fromVisible = false
             } else {
-              this.$message.error(res.msg);  // 弹出错误的信息
+              this.$message.error(res.msg)  // 弹出错误的信息
             }
-          });
+          })
         }
-      });
+      })
     },
     del(id) {   // 单个删除
       this.$confirm('您确定删除吗？', '确认删除', {type: "warning"}).then(response => {

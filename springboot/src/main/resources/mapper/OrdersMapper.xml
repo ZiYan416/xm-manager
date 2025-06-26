@@ -144,4 +144,22 @@
         where id = #{id}
     </update>
 
+    <select id="selectFinanceStatistics" resultType="com.example.entity.FinanceStatistics">
+        SELECT
+            t.id AS typeId,
+            t.name AS typeName,
+            COUNT(o.id) AS orderCount,
+            SUM(o.price) AS totalIncome
+        FROM
+            orders o
+                LEFT JOIN
+            type t ON o.type_id = t.id
+        WHERE
+            o.deleted = 0 AND
+            o.in_time BETWEEN #{startDate} AND #{endDate} AND
+            o.hotel_id = #{hotelId}
+        GROUP BY
+            t.id
+    </select>
+
 </mapper>
