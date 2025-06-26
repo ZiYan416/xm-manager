@@ -8,5 +8,4 @@ public enum RoleEnum {
     // 用户
     USER,
 
-    SHENHE
 }

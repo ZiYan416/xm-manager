@@ -68,13 +68,7 @@
             <el-menu-item index="/hotel">酒店信息</el-menu-item>
             <el-menu-item index="/user">用户信息</el-menu-item>
           </el-submenu>
-          <!-- 当角色为 SHENHE 时，只显示酒店信息 -->
-          <el-submenu index="user" v-if="user.role === 'SHENHE'">
-            <template slot="title">
-              <i class="el-icon-menu"></i><span>用户管理</span>
-            </template>
-            <el-menu-item index="/hotel">酒店信息</el-menu-item>
-          </el-submenu>
+
         </el-menu>
       </div>
 
