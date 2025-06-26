@@ -70,9 +70,6 @@ public class WebController {
         if (RoleEnum.USER.name().equals(account.getRole())) {
             userService.register(account);
         }
-        if (RoleEnum.SHENHE.name().equals(account.getRole())) {
-            hotelService.register(account);
-        }
         return Result.success();
     }
 
